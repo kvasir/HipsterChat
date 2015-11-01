@@ -24,6 +24,7 @@ function onClosed() {
 
 function createWindow(provider, i) {
 	const win = new BrowserWindow({
+		title: app.getName(),
 		'min-width': 800,
 		'min-height': 600,
 		'web-preferences': {
