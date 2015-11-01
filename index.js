@@ -1,5 +1,7 @@
 'use strict';
 const app = require('app');
+const fs = require('fs');
+const path = require('path');
 const BrowserWindow = require('browser-window');
 
 // report crashes to the Electron project
@@ -46,5 +48,21 @@ app.on('activate-with-no-open-windows', () => {
 });
 
 app.on('ready', () => {
-	mainWindow = createMainWindow();
+	const settingsFile = path.join(app.getPath('userData'), 'settings.json');
+
+	let settings = {
+		teams: []
+	};
+
+	fs.access(settingsFile, fs.F_OK, function (err) {
+		// Create settings file if it doesn't exist.
+		if (err) {
+			fs.writeFileSync(settingsFile, JSON.stringify(settings), 'utf8');
+		} else {
+			let file = fs.readFileSync(settingsFile, 'utf8');
+			settings = JSON.parse(file);
+		}
+
+		mainWindow = createMainWindow();
+	});
 });
