@@ -24,7 +24,7 @@
 
 ## Dev
 
-Builds the app for OS X, Linux, and Windows, using [electron-packager](https://github.com/maxogden/electron-packager).
+Built with [Electron](http://electron.atom.io).
 
 ###### Commands
 
