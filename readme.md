@@ -4,13 +4,23 @@
 
 *OS X 10.8+, Windows 7+ & Linux are supported.*
 
-### Run
 
-```
-$ npm start
-```
+## Install
 
-### Dev
+### OS X
+
+[**Download**](https://github.com/kvasir/HipsterChat/raw/master/dist/HipsterChat-osx-0.0.0.zip), unzip, and move `HipsterChat.app` to the `/Applications` directory.
+
+### Linux
+
+[**Download**](https://github.com/kvasir/HipsterChat/raw/master/dist/HipsterChat-linux-0.0.0.zip) and unzip to some location.
+
+### Windows
+
+[**Download**](https://github.com/kvasir/HipsterChat/raw/master/dist/HipsterChat-windows-0.0.0.zip) and unzip to some location.
+
+
+## Dev
 
 Builds the app for OS X, Linux, and Windows, using [electron-packager](https://github.com/maxogden/electron-packager).
 
