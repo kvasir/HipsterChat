@@ -1,23 +1,45 @@
 {
   "name": "HipsterChat",
-  "version": "1.0.0",
+  "productName": "HipsterChat",
+  "version": "0.0.0",
   "description": "",
-  "main": "main.js",
-  "scripts": {
-    "start": "electron main.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/kvasir/HipsterChat.git"
   },
-  "author": "MartinSandstrom <maartiin_91@hotmail.com> (http://martinsandstrom.github.io)",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/kvasir/HipsterChat/issues"
-  },
   "homepage": "https://github.com/kvasir/HipsterChat",
+  "author": "MartinSandstrom <maartiin_91@hotmail.com> (http://martinsandstrom.github.io)",
+  "engines": {
+    "node": ">=4"
+  },
+  "electronVersion": "0.34.1",
+  "scripts": {
+    "test": "xo",
+    "start": "electron .",
+    "build": "electron-packager . $npm_package_productName --out=dist --ignore='^/dist$' --prune --asar --all --version=$npm_package_electronVersion"
+  },
+  "files": [
+    "index.js",
+    "index.html",
+    "index.css"
+  ],
+  "keywords": [
+    "electron-app"
+  ],
+  "dependencies": {
+    "electron-debug": "^0.3.0"
+  },
   "devDependencies": {
-    "electron-prebuilt": "^0.34.2"
+    "electron-packager": "^5.0.0",
+    "electron-prebuilt": "^0.34.2",
+    "xo": "^0.10.0"
+  },
+  "xo": {
+    "esnext": true,
+    "envs": [
+      "node",
+      "browser"
+    ]
   }
 }
