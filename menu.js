@@ -34,6 +34,16 @@ const darwinTpl = [
 				click() {
 					ipc.send('show-settings');
 				}
+			},
+			{
+				type: 'separator'
+			},
+			{
+				label: `Quit ${appName}`,
+				accelerator: 'Cmd+Q',
+				click() {
+					app.quit();
+				}
 			}
 		]
 	},
