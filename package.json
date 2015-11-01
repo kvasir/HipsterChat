@@ -30,7 +30,11 @@
     "index.css"
   ],
   "keywords": [
-    "electron-app"
+    "electron-app",
+    "hipchat",
+    "chat",
+    "instant",
+    "messaging"
   ],
   "dependencies": {
     "electron-debug": "^0.3.0"
