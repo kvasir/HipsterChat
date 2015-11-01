@@ -18,7 +18,6 @@ let settingsWindow = null;
 
 function createTeamWindow(team) {
 	const win = new BrowserWindow({
-		title: team,
 		'min-width': 800,
 		'min-height': 600,
 		'web-preferences': {
@@ -28,6 +27,9 @@ function createTeamWindow(team) {
 	});
 
 	win.loadUrl('https://' + team + '.hipchat.com');
+	win.webContents.on('did-finish-load', () => {
+		win.setTitle(team);
+	});
 
 	return win;
 }
