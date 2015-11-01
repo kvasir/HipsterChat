@@ -9,9 +9,13 @@
     "url": "https://github.com/kvasir/HipsterChat.git"
   },
   "homepage": "https://github.com/kvasir/HipsterChat",
-  "bugs": { "url" : "https://github.com/kvasir/HipsterChat/issues" },
+  "bugs": {
+    "url": "https://github.com/kvasir/HipsterChat/issues"
+  },
   "author": "MartinSandstrom <maartiin_91@hotmail.com> (http://martinsandstrom.github.io)",
-  "contributors": ["John-Philip Johansson <seriema@gmail.com> (http://johansson.jp/)"],
+  "contributors": [
+    "John-Philip Johansson <seriema@gmail.com> (http://johansson.jp/)"
+  ],
   "engines": {
     "node": ">=4"
   },
