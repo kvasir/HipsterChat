@@ -1,0 +1,19 @@
+{
+  "name": "HipsterChat",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kvasir/HipsterChat.git"
+  },
+  "author": "MartinSandstrom <maartiin_91@hotmail.com> (http://martinsandstrom.github.io)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kvasir/HipsterChat/issues"
+  },
+  "homepage": "https://github.com/kvasir/HipsterChat"
+}
