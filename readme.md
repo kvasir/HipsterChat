@@ -2,6 +2,8 @@
 
 > Unofficial HipChat app
 
+![screenshot](media/screenshot.png)
+
 *OS X 10.8+, Windows 7+ & Linux are supported.*
 
 
