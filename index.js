@@ -21,6 +21,8 @@ function createTeamWindow(team) {
 		'min-width': 800,
 		'min-height': 600,
 		'web-preferences': {
+			'partition': team,
+
 			// fails without this because of CommonJS script detection
 			'node-integration': false
 		}
