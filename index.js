@@ -10,26 +10,29 @@ require('crash-reporter').start();
 // adds debug features like hotkeys for triggering dev tools and reload
 require('electron-debug')();
 
+
 // prevent window being garbage collected
-let mainWindow;
+var windows = [];
 
 function onClosed() {
 	// dereference the window
 	// for multiple windows store them in an array
-	mainWindow = null;
+	windows.forEach(function(window){
+		window = null;
+	});
 }
 
-function createMainWindow() {
+function createWindow(provider, i) {
 	const win = new BrowserWindow({
-		width: 800,
-		height: 600,
+		'min-width': 800,
+		'min-height': 600,
 		'web-preferences': {
 			// fails without this because of CommonJS script detection
 			'node-integration': false
 		}
 	});
 
-	win.loadUrl('https://crusader.hipchat.com/chat/');
+	win.loadUrl('https://' + provider);
 	win.on('closed', onClosed);
 
 	return win;
@@ -41,17 +44,11 @@ app.on('window-all-closed', () => {
 	}
 });
 
-app.on('activate-with-no-open-windows', () => {
-	if (!mainWindow) {
-		mainWindow = createMainWindow();
-	}
-});
-
 app.on('ready', () => {
 	const settingsFile = path.join(app.getPath('userData'), 'settings.json');
 
 	let settings = {
-		teams: []
+		teams: ['google.se','google.se']
 	};
 
 	fs.access(settingsFile, fs.F_OK, function (err) {
@@ -63,6 +60,8 @@ app.on('ready', () => {
 			settings = JSON.parse(file);
 		}
 
-		mainWindow = createMainWindow();
+		settings.teams.forEach(function(team, index){
+			windows.push(createWindow(team, index));
+		});
 	});
 });
