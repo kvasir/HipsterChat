@@ -23,7 +23,7 @@
   "scripts": {
     "test": "xo",
     "start": "electron .",
-    "build": "electron-packager . $npm_package_productName --overwrite --out=dist --ignore='^/dist$' --prune --asar --all --version=$npm_package_electronVersion",
+    "build": "npm run build-osx && npm run build-linux && npm run build-windows",
     "build-osx": "electron-packager . $npm_package_productName --overwrite --out=dist --ignore='^/dist$' --ignore='^/media$' --prune --platform=darwin --arch=x64 --icon=media/Icon.icns --app-bundle-id=com.kvasir.hipsterchat --app-version=$npm_package_version --version=$npm_package_electronVersion && cd dist/HipsterChat-darwin-x64 && zip -ryXq9 ../HipsterChat-osx-${npm_package_version}.zip HipsterChat.app",
     "build-linux": "electron-packager . $npm_package_productName --overwrite --out=dist --ignore='^/dist$' --ignore='^/media/(?!Icon.png$).*' --prune --platform=linux --arch=x64 --app-bundle-id=com.kvasir.hipsterchat --app-version=$npm_package_version --version=$npm_package_electronVersion && cd dist/HipsterChat-linux-x64/ && zip -ryq9 ../HipsterChat-linux-\"$npm_package_version\".zip *",
     "build-windows": "electron-packager . $npm_package_productName --overwrite --out=dist --ignore='^/dist$' --ignore='^/media/(?!Icon.ico$).*' --prune --platform=win32 --arch=ia32 --icon=media/Icon.ico --version=$npm_package_electronVersion --version-string.ProductName=$npm_package_productName --version-string.ProductVersion=$npm_package_electronVersion && cd dist/HipsterChat-win32-ia32/ && zip -ryq9 ../HipsterChat-windows-\"$npm_package_version\".zip *"
