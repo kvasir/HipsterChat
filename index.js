@@ -29,7 +29,9 @@ function createTeamWindow(team) {
 
 	win.loadUrl('https://' + team + '.hipchat.com/chat');
 	win.webContents.on('did-finish-load', () => {
-		win.setTitle(team);
+		if (team !== 'www') {
+			win.setTitle(team);
+		}
 	});
 
 	return win;
