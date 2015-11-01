@@ -2,7 +2,6 @@
 const app = require('app');
 const fs = require('fs');
 const path = require('path');
-const ipc = require('ipc');
 const BrowserWindow = require('browser-window');
 const Menu = require('menu');
 const appMenu = require('./menu');
@@ -14,7 +13,6 @@ require('crash-reporter').start();
 require('electron-debug')();
 
 let windows = [];
-let settingsWindow = null;
 
 function createTeamWindow(team) {
 	const win = new BrowserWindow({
@@ -29,28 +27,12 @@ function createTeamWindow(team) {
 		}
 	});
 
-	win.loadUrl('https://' + team + '.hipchat.com');
+	win.loadUrl('https://' + team + '.hipchat.com/chat');
 	win.webContents.on('did-finish-load', () => {
 		win.setTitle(team);
 	});
 
 	return win;
-}
-
-function createSettingsWindow() {
-	settingsWindow = new BrowserWindow({
-		title: app.getName(),
-		width: 400,
-		height: 300,
-		show: false
-	});
-
-	settingsWindow.loadUrl('file://' + path.join(__dirname, 'settings.html'));
-	settingsWindow.on('closed', function () {
-		settingsWindow = null;
-	});
-
-	return settingsWindow;
 }
 
 function openAllTeamWindows(settings) {
@@ -85,32 +67,5 @@ app.on('ready', () => {
 		}
 
 		openAllTeamWindows(settings);
-
-		settingsWindow = createSettingsWindow();
-		settingsWindow.webContents.on('did-finish-load', function() {
-			settingsWindow.webContents.send('settings-message', settings);
-		});
-		settingsWindow.show();
-
-		ipc.on('show-settings', function () {
-			console.log('show?');
-			if (!settingsWindow) {
-				settingsWindow = createSettingsWindow();
-			}
-			settingsWindow.show();
-		});
-
-		ipc.on('settings-save', function (event, teams) {
-			settings.teams = teams;
-			fs.writeFileSync(settingsFile, JSON.stringify(settings), 'utf8');
-
-			// Close all windows, and open them again. Not super clean but...
-			settingsWindow.hide();
-			windows.forEach(function (w) {
-				w.close();
-			});
-			windows = [];
-			openAllTeamWindows(settings);
-		});
 	});
 });

@@ -1,21 +1,9 @@
 'use strict';
 const os = require('os');
 const app = require('app');
-const ipc = require('ipc');
 const Menu = require('menu');
-const BrowserWindow = require('browser-window');
 const shell = require('shell');
 const appName = app.getName();
-
-function sendAction(action) {
-	const win = BrowserWindow.getAllWindows()[0];
-
-	if (process.platform === 'darwin') {
-		win.restore();
-	}
-
-	win.webContents.send(action);
-}
 
 const darwinTpl = [
 	{
@@ -24,16 +12,6 @@ const darwinTpl = [
 			{
 				label: `About ${appName}`,
 				role: 'about'
-			},
-			{
-				type: 'separator'
-			},
-			{
-				label: 'Preferences...',
-				accelerator: 'Cmd+,',
-				click() {
-					ipc.send('show-settings');
-				}
 			},
 			{
 				type: 'separator'
