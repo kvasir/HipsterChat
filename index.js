@@ -19,11 +19,15 @@ function onClosed() {
 
 function createMainWindow() {
 	const win = new BrowserWindow({
-		width: 600,
-		height: 400
+		width: 800,
+		height: 600,
+		'web-preferences': {
+			// fails without this because of CommonJS script detection
+			'node-integration': false
+		}
 	});
 
-	win.loadUrl(`file://${__dirname}/index.html`);
+	win.loadUrl('https://crusader.hipchat.com/chat/');
 	win.on('closed', onClosed);
 
 	return win;
