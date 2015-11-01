@@ -89,6 +89,14 @@ app.on('ready', () => {
 		});
 		settingsWindow.show();
 
+		ipc.on('show-settings', function () {
+			console.log('show?');
+			if (!settingsWindow) {
+				settingsWindow = createSettingsWindow();
+			}
+			settingsWindow.show();
+		});
+
 		ipc.on('settings-save', function (event, teams) {
 			settings.teams = teams;
 			fs.writeFileSync(settingsFile, JSON.stringify(settings), 'utf8');
