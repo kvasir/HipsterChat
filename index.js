@@ -5,6 +5,7 @@ const path = require('path');
 const BrowserWindow = require('browser-window');
 const Menu = require('menu');
 const appMenu = require('./menu');
+var shell = require('shell');
 
 // report crashes to the Electron project
 require('crash-reporter').start();
@@ -28,6 +29,10 @@ function createTeamWindow(team) {
 	});
 
 	win.loadUrl('https://' + team + '.hipchat.com/chat');
+	win.webContents.on('new-window', (e, url) => {
+		e.preventDefault();
+		shell.openExternal(url);
+	});
 	win.webContents.on('did-finish-load', () => {
 		if (team !== 'www') {
 			win.setTitle(team);
