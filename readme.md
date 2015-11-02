@@ -11,15 +11,15 @@
 
 ### OS X
 
-[**Download**](https://github.com/kvasir/HipsterChat/raw/master/dist/HipsterChat-osx-0.0.0.zip), unzip, and move `HipsterChat.app` to the `/Applications` directory.
+[**Download**](https://github.com/kvasir/hipsterchat/releases/latest), unzip, and move `HipsterChat.app` to the `/Applications` directory.
 
 ### Linux
 
-[**Download**](https://github.com/kvasir/HipsterChat/raw/master/dist/HipsterChat-linux-0.0.0.zip) and unzip to some location.
+[**Download**](https://github.com/kvasir/hipsterchat/releases/latest) and unzip to some location.
 
 ### Windows
 
-[**Download**](https://github.com/kvasir/HipsterChat/raw/master/dist/HipsterChat-windows-0.0.0.zip) and unzip to some location.
+[**Download**](https://github.com/kvasir/hipsterchat/releases/latest) and unzip to some location.
 
 
 ## Dev
