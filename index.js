@@ -5,7 +5,7 @@ const path = require('path');
 const BrowserWindow = require('browser-window');
 const Menu = require('menu');
 const appMenu = require('./menu');
-var shell = require('shell');
+const shell = require('shell');
 
 // report crashes to the Electron project
 require('crash-reporter').start();
@@ -13,7 +13,7 @@ require('crash-reporter').start();
 // adds debug features like hotkeys for triggering dev tools and reload
 require('electron-debug')();
 
-let windows = [];
+const windows = [];
 
 function createTeamWindow(team) {
 	const win = new BrowserWindow({
@@ -28,7 +28,7 @@ function createTeamWindow(team) {
 		}
 	});
 
-	win.loadUrl('https://' + team + '.hipchat.com/chat');
+	win.loadUrl(`https://${team}.hipchat.com/chat`);
 	win.webContents.on('new-window', (e, url) => {
 		e.preventDefault();
 		shell.openExternal(url);
@@ -43,7 +43,7 @@ function createTeamWindow(team) {
 }
 
 function openAllTeamWindows(settings) {
-	settings.teams.forEach(function(team, index){
+	settings.teams.forEach((team, index) => {
 		windows.push(createTeamWindow(team, index));
 	});
 }
@@ -64,12 +64,12 @@ app.on('ready', () => {
 		teams: ['www']
 	};
 
-	fs.access(settingsFile, fs.F_OK, function (err) {
+	fs.access(settingsFile, fs.F_OK, err => {
 		// Create settings file if it doesn't exist.
 		if (err) {
 			fs.writeFileSync(settingsFile, JSON.stringify(settings), 'utf8');
 		} else {
-			let file = fs.readFileSync(settingsFile, 'utf8');
+			const file = fs.readFileSync(settingsFile, 'utf8');
 			settings = JSON.parse(file);
 		}
 
