@@ -17,8 +17,8 @@ const windows = [];
 
 function createTeamWindow(team) {
 	const win = new BrowserWindow({
-		'min-width': 800,
-		'min-height': 600,
+		'width': 800,
+		'height': 600,
 		'web-preferences': {
 			'partition': team,
 			'plugins': false,
