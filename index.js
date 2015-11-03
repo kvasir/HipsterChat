@@ -102,6 +102,7 @@ app.on('ready', () => {
 		});
 
 		ipc.on('settings-save', function (event, teams) {
+			teams = teams.filter(Boolean);
 			settings.teams = teams;
 			fs.writeFileSync(settingsFile, JSON.stringify(settings), 'utf8');
 
