@@ -42,7 +42,8 @@ function createSettingsWindow() {
 		title: app.getName(),
 		width: 400,
 		height: 300,
-		show: false
+		show: false,
+		frame: false
 	});
 
 	settingsWindow.loadUrl('file://' + path.join(__dirname, 'settings.html'));
