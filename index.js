@@ -4,8 +4,9 @@ const fs = require('fs');
 const path = require('path');
 const BrowserWindow = require('browser-window');
 const Menu = require('menu');
-const appMenu = require('./menu');
+const Tray = require('tray');
 const shell = require('shell');
+const appMenu = require('./menu');
 
 // report crashes to the Electron project
 require('crash-reporter').start();
@@ -15,12 +16,28 @@ require('electron-debug')();
 
 const windows = [];
 
+function updateBadge(title) {
+	const messageCount = (/\(([0-9]+)\)/).exec(title);
+	console.log(messageCount, title);
+
+	if (Tray.displayBalloon) {
+		Tray.displayBalloon({
+			title: `Title ${messageCount}`,
+			content: `Content ${messageCount}`
+		});
+	}
+
+	if (app.dock) {
+		app.dock.setBadge(messageCount ? messageCount[1] : '');
+	}
+}
+
 function createTeamWindow(team) {
 	const win = new BrowserWindow({
 		'width': 800,
 		'height': 600,
 		'web-preferences': {
-			'partition': team,
+			//'partition': team,
 			'plugins': false,
 
 			// fails without this because of CommonJS script detection
@@ -29,13 +46,14 @@ function createTeamWindow(team) {
 	});
 
 	win.loadUrl(`https://${team}.hipchat.com/chat`);
+	win.on('page-title-updated', (e, title) => updateBadge(title));
 	win.webContents.on('new-window', (e, url) => {
 		e.preventDefault();
 		shell.openExternal(url);
 	});
 	win.webContents.on('did-finish-load', () => {
 		if (team !== 'www') {
-			win.setTitle(team);
+			//win.setTitle(team);
 		}
 	});
 
