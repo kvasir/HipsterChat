@@ -94,10 +94,6 @@ app.on('ready', () => {
 		settingsWindow.show();
 
 		ipc.on('show-settings', function () {
-			console.log('show?');
-			if (!settingsWindow) {
-				settingsWindow = createSettingsWindow();
-			}
 			settingsWindow.show();
 		});
 
