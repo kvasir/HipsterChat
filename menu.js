@@ -13,7 +13,6 @@ function sendAction(action) {
 	if (process.platform === 'darwin') {
 		win.restore();
 	}
-
 	win.webContents.send(action);
 }
 
@@ -32,7 +31,7 @@ const darwinTpl = [
 				label: 'Preferences...',
 				accelerator: 'Cmd+,',
 				click() {
-					ipc.send('show-settings');
+					sendAction('show-settings');
 				}
 			},
 			{

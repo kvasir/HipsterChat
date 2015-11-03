@@ -47,10 +47,6 @@ function createSettingsWindow() {
 	});
 
 	settingsWindow.loadUrl('file://' + path.join(__dirname, 'settings.html'));
-	settingsWindow.on('closed', function () {
-		settingsWindow = null;
-	});
-
 	return settingsWindow;
 }
 
@@ -77,6 +73,10 @@ app.on('ready', () => {
 		showSettings: true
 	};
 
+	ipc.on('show-setting', function(){
+		settingsWindow.show();
+	});
+
 	fs.access(settingsFile, fs.F_OK, function (err) {
 		// Create settings file if it doesn't exist.
 		if (err) {
@@ -93,12 +93,10 @@ app.on('ready', () => {
 			settingsWindow.webContents.send('settings-message', settings);
 		});
 
+
+
 		if(settings.showSettings)
 			settingsWindow.show();
-
-		ipc.on('show-settings', function () {
-			settingsWindow.show();
-		});
 
 		ipc.on('settings-save', function (event, newSettings) {
 			settings.teams = newSettings.teams.filter(Boolean);
