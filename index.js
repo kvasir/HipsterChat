@@ -73,7 +73,8 @@ app.on('ready', () => {
 
 	// Default settings
 	let settings = {
-		teams: ['www']
+		teams: ['www'],
+		showSettings: true
 	};
 
 	fs.access(settingsFile, fs.F_OK, function (err) {
@@ -91,15 +92,17 @@ app.on('ready', () => {
 		settingsWindow.webContents.on('did-finish-load', function() {
 			settingsWindow.webContents.send('settings-message', settings);
 		});
-		settingsWindow.show();
+
+		if(settings.showSettings)
+			settingsWindow.show();
 
 		ipc.on('show-settings', function () {
 			settingsWindow.show();
 		});
 
-		ipc.on('settings-save', function (event, teams) {
-			teams = teams.filter(Boolean);
-			settings.teams = teams;
+		ipc.on('settings-save', function (event, newSettings) {
+			settings.teams = newSettings.teams.filter(Boolean);
+			settings.showSettings = newSettings.showSettings;
 			fs.writeFileSync(settingsFile, JSON.stringify(settings), 'utf8');
 
 			// Close all windows, and open them again. Not super clean but...

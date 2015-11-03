@@ -20,10 +20,14 @@
 			<div class="window-content">
 				<form class="teams">
 
+					<input class="show-settings-on-start" type="checkbox"> Show settings on application start
 				</form>
+
 			</div>
 			<footer class="toolbar toolbar-footer">
+
 				<div class="toolbar-actions">
+
 					<button class="btn btn-primary pull-right save-settings">Save</button>
 				</div>
 			</footer>
@@ -32,15 +36,21 @@
 		<script>
 			var ipc = require('ipc');
 			var list = document.getElementsByClassName('teams')[0];
+			var settingsCheckbox = document.getElementsByClassName('show-settings-on-start')[0];
 
 			var saveButton = document.getElementsByClassName('save-settings')[0];
 			saveButton.addEventListener('click', function () {
 				var teamNames = document.getElementsByClassName('team-name');
 				var teams = [];
+
 				for(var i=0; i < teamNames.length; i++) {
 					teams.push(teamNames[i].value);
 				}
-				ipc.send('settings-save', teams);
+				var settings = {
+					teams: teams,
+					showSettings: settingsCheckbox.checked
+				};
+				ipc.send('settings-save', settings);
 			});
 
 			var addButton = document.getElementsByClassName('add-team')[0];
@@ -64,6 +74,8 @@
 				settings.teams.forEach(function (team) {
 					list.appendChild(createTeamItem(team));
 				});
+				if(settings.showSettings)
+					settingsCheckbox.checked = true;
 			});
 		</script>
 	</body>
