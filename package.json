@@ -41,7 +41,8 @@
     "messaging"
   ],
   "dependencies": {
-    "electron-debug": "^0.3.0"
+    "electron-debug": "^0.3.0",
+    "photon": "git+https://git@github.com/connors/photon.git"
   },
   "devDependencies": {
     "electron-packager": "^5.0.0",

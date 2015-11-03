@@ -3,14 +3,30 @@
 	<head>
 		<meta charset="utf-8">
 		<title>Hipster Chat settings</title>
+		<link rel="stylesheet" href="node_modules/photon/dist/css/photon.css">
 		<link rel="stylesheet" href="index.css">
 	</head>
 	<body>
-		<div class="container">
-			<button class="save-settings">Save</button>
-			<button class="add-team">Add</button>
-			<ul class="teams">
-			</ul>
+
+		<div class="window">
+			<header class="toolbar toolbar-header">
+				<h1 class="title">Settings</h1>
+				<div class="toolbar-actions">
+					<div class="btn-group">
+						<button class="btn btn-default add-team">Add team</button>
+					</div>
+				</diV>
+			</header>
+			<div class="window-content">
+				<form class="teams">
+
+				</form>
+			</div>
+			<footer class="toolbar toolbar-footer">
+				<div class="toolbar-actions">
+					<button class="btn btn-primary pull-right save-settings">Save</button>
+				</div>
+			</footer>
 		</div>
 
 		<script>
@@ -33,11 +49,12 @@
 			});
 
 			function createTeamItem(value) {
-				var item = document.createElement('li');
+				var item = document.createElement('div');
+				item.className = 'form-group'
 				var input = document.createElement('input');
 				input.type = 'text';
 				input.value = value;
-				input.className = 'team-name';
+				input.className = 'team-name form-control';
 				item.appendChild(input);
 
 				return item;
