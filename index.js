@@ -17,6 +17,8 @@ const windows = [];
 
 function createTeamWindow(team) {
 	const win = new BrowserWindow({
+		'min-width': 750,
+		'min-height': 250,
 		'width': 800,
 		'height': 600,
 		'web-preferences': {
