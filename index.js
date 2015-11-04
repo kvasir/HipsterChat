@@ -39,23 +39,29 @@ function createTeamWindow(team) {
 		'width': 800,
 		'height': 600,
 		'web-preferences': {
-			//'partition': team,
+			'partition': team,
 			'plugins': false,
 
 			// fails without this because of CommonJS script detection
-			'node-integration': false
+			'node-integration': false,
+
+			// required for Hipchat page title updates
+			'web-security': false
 		}
 	});
 
 	win.loadUrl(`https://${team}.hipchat.com/chat`);
-	win.on('page-title-updated', (e, title) => updateBadge(title));
+	win.on('page-title-updated', (e, title) => {
+		//e.preventDefault();
+		updateBadge(title);
+	});
 	win.webContents.on('new-window', (e, url) => {
 		e.preventDefault();
 		shell.openExternal(url);
 	});
 	win.webContents.on('did-finish-load', () => {
 		if (team !== 'www') {
-			//win.setTitle(team);
+			win.setTitle(team);
 		}
 	});
 
