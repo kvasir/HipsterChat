@@ -41,7 +41,8 @@
     "messaging"
   ],
   "dependencies": {
-    "electron-debug": "^0.3.0"
+    "electron-debug": "^0.3.0",
+    "xml2js": "^0.4.15"
   },
   "devDependencies": {
     "electron-packager": "^5.0.0",

@@ -6,6 +6,7 @@ const BrowserWindow = require('browser-window');
 const Menu = require('menu');
 const Tray = require('tray');
 const shell = require('shell');
+const ipc = require('ipc');
 const appMenu = require('./menu');
 
 // report crashes to the Electron project
@@ -15,20 +16,15 @@ require('crash-reporter').start();
 require('electron-debug')();
 
 const windows = [];
+let tray;
+let lastActiveWindow;
 
-function updateBadge(title) {
-	const messageCount = (/\(([0-9]+)\)/).exec(title);
-	console.log(messageCount, title);
-
-	if (Tray.displayBalloon) {
-		Tray.displayBalloon({
-			title: `Title ${messageCount}`,
-			content: `Content ${messageCount}`
+function showBalloon(title, content) {
+	if (tray) {
+		tray.displayBalloon({
+			title,
+			content
 		});
-	}
-
-	if (app.dock) {
-		app.dock.setBadge(messageCount ? messageCount[1] : '');
 	}
 }
 
@@ -42,6 +38,8 @@ function createTeamWindow(team) {
 			'partition': team,
 			'plugins': false,
 
+			'preload': path.join(__dirname, 'browser.js'),
+
 			// fails without this because of CommonJS script detection
 			'node-integration': false,
 
@@ -51,10 +49,6 @@ function createTeamWindow(team) {
 	});
 
 	win.loadUrl(`https://${team}.hipchat.com/chat`);
-	win.on('page-title-updated', (e, title) => {
-		//e.preventDefault();
-		updateBadge(title);
-	});
 	win.webContents.on('new-window', (e, url) => {
 		e.preventDefault();
 		shell.openExternal(url);
@@ -100,5 +94,27 @@ app.on('ready', () => {
 		}
 
 		openAllTeamWindows(settings);
+
+		// Electron doesn't support notifications in Windows yet. https://github.com/atom/electron/issues/262
+		if (process.platform === 'win32') {
+			tray = new Tray(path.join(__dirname, 'media/Icon.png'));
+			tray.setToolTip('HipsterChat notifications');
+
+			tray.on('balloon-clicked', () => {
+				lastActiveWindow.focus();
+			});
+
+			ipc.on('hipchat-message', (e, msg) => {
+				const win = BrowserWindow.fromWebContents(e.sender);
+				if (win.isFocused()) {
+					return;
+				}
+
+				showBalloon(msg.from, msg.messages[msg.messages.length - 1]);
+
+				// Doesn't seem possible to pass extra info to balloon, and we want this window to open when the balloon is clicked.
+				lastActiveWindow = win;
+			});
+		}
 	});
 });
