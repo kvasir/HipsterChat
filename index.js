@@ -29,6 +29,7 @@ let settings = {
 		notificationSound: true
 	}
 };
+const settingsFile = path.join(app.getPath('userData'), 'settings.json');
 
 function showBalloon(title, content) {
 	if (!settings.win32.balloons) {
@@ -62,6 +63,7 @@ function createTeamWindow(team) {
 		'width': 800,
 		'height': 600,
 		'web-preferences': {
+			// TODO: This is screwing with sessions atm. Once settings (for multiple accounts) works as we want, we'll figure this out.
 			//'partition': team,
 			'plugins': false,
 
@@ -84,6 +86,11 @@ function createTeamWindow(team) {
 		if (team !== 'www') {
 			win.setTitle(team);
 		}
+
+		win.webContents.send('debug-msg', {
+			userSettingsPath: settingsFile,
+			userSettings: settings
+		});
 	});
 
 	return win;
@@ -103,9 +110,6 @@ app.on('window-all-closed', () => {
 
 app.on('ready', () => {
 	Menu.setApplicationMenu(appMenu);
-
-	const settingsFile = path.join(app.getPath('userData'), 'settings.json');
-	console.info(`We're working on getting a Settings menu working. In the meantime you can edit your settings file manually: ${settingsFile}`);
 
 	fs.access(settingsFile, fs.F_OK, err => {
 		// Create settings file if it doesn't exist.
