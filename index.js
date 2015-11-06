@@ -81,8 +81,7 @@ function createTeamWindow(team) {
 		'width': 800,
 		'height': 600,
 		'web-preferences': {
-			// TODO: This is screwing with sessions atm. Once settings (for multiple accounts) works as we want, we'll figure this out.
-			// 'partition': team,
+			'partition': `persist:${team}`,
 			'plugins': false,
 
 			'preload': path.join(__dirname, 'browser.js'),
