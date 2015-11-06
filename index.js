@@ -94,7 +94,7 @@ app.on('ready', () => {
 			// Extend the settings object and save it, so we can add new settings in newer versions without issues.
 			// TODO: Need to clean out old settings variables somehow.
 			const file = fs.readFileSync(settingsFile, 'utf8');
-			Object.assign(settings, JSON.parse(file));
+			settings = Object.assign(settings, JSON.parse(file));
 		}
 		// After merging settings, save it down again.
 		fs.writeFileSync(settingsFile, JSON.stringify(settings), 'utf8');
