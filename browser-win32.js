@@ -10,9 +10,11 @@ Notification = function (title, options) {
 	const notification = new OldNotification(title, options);
 	ipc.send('notification-shim', {
 		title,
-		options
+		content: options.body || ''
 	});
 
 	return notification;
 };
 Notification.prototype = OldNotification.prototype;
+Notification.permission = OldNotification.permission;
+Notification.requestPermission = OldNotification.requestPermission;
