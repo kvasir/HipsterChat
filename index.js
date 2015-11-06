@@ -7,6 +7,7 @@ const Menu = require('menu');
 const Tray = require('tray');
 const shell = require('shell');
 const ipc = require('ipc');
+const notifier = require('node-notifier');
 const appMenu = require('./menu');
 
 // report crashes to the Electron project
@@ -103,6 +104,9 @@ app.on('ready', () => {
 			tray.on('balloon-clicked', () => {
 				lastActiveWindow.focus();
 			});
+			notifier.on('click', () => {
+				lastActiveWindow.focus();
+			});
 
 			ipc.on('hipchat-message', (e, msg) => {
 				const win = BrowserWindow.fromWebContents(e.sender);
@@ -111,6 +115,18 @@ app.on('ready', () => {
 				}
 
 				showBalloon(msg.from, msg.messages[msg.messages.length - 1]);
+				notifier.notify({
+					title: msg.from,
+					message: msg.messages[msg.messages.length - 1],
+					icon: path.join(__dirname, 'media/Icon.png'), // absolute path (not balloons)
+					sound: true, // Only Notification Center or Windows Toasters
+					wait: true // wait with callback until user action is taken on notification
+				}, function (err, response) {
+					// response is response from notification
+					console.log('notifier');
+					console.log(err);
+					console.log(response);
+				});
 
 				// Doesn't seem possible to pass extra info to balloon, and we want this window to open when the balloon is clicked.
 				lastActiveWindow = win;
