@@ -7,6 +7,7 @@ const Menu = require('menu');
 const Tray = require('tray');
 const shell = require('shell');
 const ipc = require('ipc');
+const notifier = require('node-notifier');
 const appMenu = require('./menu');
 
 // report crashes to the Electron project
@@ -19,13 +20,39 @@ const windows = [];
 let tray;
 let lastActiveWindow;
 
-function showBalloon(title, content) {
-	if (tray) {
-		tray.displayBalloon({
-			title,
-			content
-		});
+// Default settings
+let settings = {
+	teams: ['www'],
+	win32: {
+		balloons: false,
+		notificationBoxes: true,
+		notificationSound: true
 	}
+};
+
+function showBalloon(title, content) {
+	if (!settings.win32.balloons) {
+		return;
+	}
+
+	tray.displayBalloon({
+		title,
+		content
+	});
+}
+
+function showNotification(title, content) {
+	if (!settings.win32.notificationBoxes) {
+		return;
+	}
+
+	notifier.notify({
+		title,
+		message: content,
+		icon: path.join(__dirname, 'media/Icon.png'),
+		sound: settings.win32.notificationSound,
+		wait: true
+	});
 }
 
 function createTeamWindow(team) {
@@ -80,14 +107,6 @@ app.on('ready', () => {
 	const settingsFile = path.join(app.getPath('userData'), 'settings.json');
 	console.info(`We're working on getting a Settings menu working. In the meantime you can edit your settings file manually: ${settingsFile}`);
 
-	// Default settings
-	let settings = {
-		teams: ['www'],
-		win32: {
-			balloons: true
-		}
-	};
-
 	fs.access(settingsFile, fs.F_OK, err => {
 		// Create settings file if it doesn't exist.
 		if (!err) {
@@ -105,14 +124,21 @@ app.on('ready', () => {
 		openAllTeamWindows(settings);
 
 		// Electron doesn't support notifications in Windows yet. https://github.com/atom/electron/issues/262
-		if (process.platform === 'win32' &&
-		    (settings.win32.balloons || settings.win32.notificationBoxes)) {
-			tray = new Tray(path.join(__dirname, 'media/Icon.png'));
-			tray.setToolTip('HipsterChat notifications');
+		if (process.platform === 'win32' && (settings.win32.balloons || settings.win32.notificationBoxes)) {
+			if (settings.win32.balloons) {
+				tray = new Tray(path.join(__dirname, 'media/Icon.png'));
+				tray.setToolTip('HipsterChat notifications');
 
-			tray.on('balloon-clicked', () => {
-				lastActiveWindow.focus();
-			});
+				tray.on('balloon-clicked', () => {
+					lastActiveWindow.focus();
+				});
+			}
+
+			if (settings.win32.notificationBoxes) {
+				notifier.on('click', () => {
+					lastActiveWindow.focus();
+				});
+			}
 
 			ipc.on('notification-shim', (e, msg) => {
 				const win = BrowserWindow.fromWebContents(e.sender);
@@ -120,9 +146,8 @@ app.on('ready', () => {
 					return;
 				}
 
-				if (settings.win32.balloons) {
-					showBalloon(msg.title, msg.options.body);
-				}
+				showBalloon(msg.title, msg.options.body);
+				showNotification(msg.title, msg.options.body);
 
 				// Doesn't seem possible to pass extra info to balloon, and we want this window to open when the balloon is clicked.
 				lastActiveWindow = win;
