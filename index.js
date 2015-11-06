@@ -22,7 +22,7 @@ function createTeamWindow(team) {
 		'width': 800,
 		'height': 600,
 		'web-preferences': {
-			'partition': team,
+			//'partition': team,
 			'plugins': false,
 
 			// fails without this because of CommonJS script detection
