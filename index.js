@@ -8,6 +8,7 @@ const Tray = require('tray');
 const shell = require('shell');
 const ipc = require('ipc');
 const notifier = require('node-notifier');
+const NativeImage = require('native-image');
 const appMenu = require('./menu');
 
 // report crashes to the Electron project
@@ -16,6 +17,7 @@ require('crash-reporter').start();
 // adds debug features like hotkeys for triggering dev tools and reload
 require('electron-debug')();
 
+const badge = NativeImage.createFromPath(path.join(__dirname, 'media/dot.png'));
 const windows = [];
 let tray;
 let lastActiveWindow;
@@ -56,6 +58,22 @@ function showNotification(title, content) {
 	});
 }
 
+function showBadge() {
+	if (process.platform === 'darwin') {
+		app.dock.setBadge(badge);
+	} else if (process.platform === 'win32') {
+		lastActiveWindow.setOverlayIcon(badge, 'You have unread messages');
+	}
+}
+
+function hideBadge() {
+	if (process.platform === 'darwin') {
+		app.dock.setBadge('');
+	} else if (process.platform === 'win32') {
+		lastActiveWindow.setOverlayIcon(null, '');
+	}
+}
+
 function createTeamWindow(team) {
 	const win = new BrowserWindow({
 		'min-width': 750,
@@ -64,7 +82,7 @@ function createTeamWindow(team) {
 		'height': 600,
 		'web-preferences': {
 			// TODO: This is screwing with sessions atm. Once settings (for multiple accounts) works as we want, we'll figure this out.
-			//'partition': team,
+			// 'partition': team,
 			'plugins': false,
 
 			'preload': path.join(__dirname, 'browser.js'),
@@ -78,6 +96,7 @@ function createTeamWindow(team) {
 	});
 
 	win.loadUrl(`https://${team}.hipchat.com/chat`);
+	win.on('focus', () => hideBadge());
 	win.webContents.on('new-window', (e, url) => {
 		e.preventDefault();
 		shell.openExternal(url);
@@ -100,6 +119,7 @@ function openAllTeamWindows(settings) {
 	settings.teams.forEach((team, index) => {
 		windows.push(createTeamWindow(team, index));
 	});
+	lastActiveWindow = windows[windows.length - 1];
 }
 
 app.on('window-all-closed', () => {
@@ -135,12 +155,14 @@ app.on('ready', () => {
 
 				tray.on('balloon-clicked', () => {
 					lastActiveWindow.focus();
+					hideBadge();
 				});
 			}
 
 			if (settings.win32.notificationBoxes) {
 				notifier.on('click', () => {
 					lastActiveWindow.focus();
+					hideBadge();
 				});
 			}
 
@@ -152,6 +174,7 @@ app.on('ready', () => {
 
 				showBalloon(msg.title, msg.options.body);
 				showNotification(msg.title, msg.options.body);
+				showBadge();
 
 				// Doesn't seem possible to pass extra info to balloon, and we want this window to open when the balloon is clicked.
 				lastActiveWindow = win;
