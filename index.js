@@ -78,25 +78,35 @@ app.on('ready', () => {
 	Menu.setApplicationMenu(appMenu);
 
 	const settingsFile = path.join(app.getPath('userData'), 'settings.json');
+	console.info(`We're working on getting a Settings menu working. In the meantime you can edit your settings file manually: ${settingsFile}`);
 
 	// Default settings
 	let settings = {
-		teams: ['www']
+		teams: ['www'],
+		win32: {
+			balloons: true
+		}
 	};
 
 	fs.access(settingsFile, fs.F_OK, err => {
 		// Create settings file if it doesn't exist.
-		if (err) {
-			fs.writeFileSync(settingsFile, JSON.stringify(settings), 'utf8');
-		} else {
+		if (!err) {
+			// Extend the settings object and save it, so we can add new settings in newer versions without issues.
+			// TODO: Need to clean out old settings variables somehow.
 			const file = fs.readFileSync(settingsFile, 'utf8');
-			settings = JSON.parse(file);
+			Object.assign(settings, JSON.parse(file));
 		}
+		// After merging settings, save it down again.
+		fs.writeFileSync(settingsFile, JSON.stringify(settings), 'utf8');
+
+		console.log('Settings used:');
+		console.dir(settings);
 
 		openAllTeamWindows(settings);
 
 		// Electron doesn't support notifications in Windows yet. https://github.com/atom/electron/issues/262
-		if (process.platform === 'win32') {
+		if (process.platform === 'win32' &&
+		    (settings.win32.balloons || settings.win32.notificationBoxes)) {
 			tray = new Tray(path.join(__dirname, 'media/Icon.png'));
 			tray.setToolTip('HipsterChat notifications');
 
@@ -104,13 +114,15 @@ app.on('ready', () => {
 				lastActiveWindow.focus();
 			});
 
-			ipc.on('hipchat-message', (e, msg) => {
+			ipc.on('notification-shim', (e, msg) => {
 				const win = BrowserWindow.fromWebContents(e.sender);
 				if (win.isFocused()) {
 					return;
 				}
 
-				showBalloon(msg.from, msg.messages[msg.messages.length - 1]);
+				if (settings.win32.balloons) {
+					showBalloon(msg.title, msg.options.body);
+				}
 
 				// Doesn't seem possible to pass extra info to balloon, and we want this window to open when the balloon is clicked.
 				lastActiveWindow = win;
