@@ -2,7 +2,7 @@
 console.log('browser.js loaded');
 
 if (process.platform === 'win32') {
-	require('./win32-browser.js');
+	require('./browser-win32.js');
 }
 
 const ipc = require('ipc');
