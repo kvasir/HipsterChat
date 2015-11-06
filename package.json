@@ -51,6 +51,12 @@
   },
   "xo": {
     "esnext": true,
+    "rules": {
+      "no-native-reassign": [2, {"exceptions": ["Notification"]}]
+    },
+    "globals": [
+      "Notification"
+    ],
     "envs": [
       "node",
       "browser"
