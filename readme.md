@@ -1,4 +1,5 @@
-# HipsterChat
+
+<img src="media/logo_with_name.png" width="300px"/>
 
 > Unofficial HipChat app
 
