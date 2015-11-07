@@ -28,7 +28,12 @@ let lastActiveWindow;
 // Default settings
 let settings = {
 	teams: ['www'],
+	darwin: {
+		badge: true,
+		bounce: true
+	},
 	win32: {
+		badge: true,
 		balloons: false,
 		notificationBoxes: true,
 		notificationSound: true
@@ -36,7 +41,7 @@ let settings = {
 };
 
 function showBalloon(title, content) {
-	if (!settings.win32.balloons) {
+	if (process.platform !== 'win32' || !settings.win32.balloons) {
 		return;
 	}
 
@@ -46,8 +51,18 @@ function showBalloon(title, content) {
 	});
 }
 
+function bounceIcon() {
+	if (process.platform !== 'darwin' || !settings.darwin.bounce) {
+		return;
+	}
+
+	app.dock.bounce();
+}
+
 function showNotification(title, content) {
-	if (!settings.win32.notificationBoxes) {
+	// We only want to use node-notifier for Windows, when the user wants it.
+	// TODO: Instead of a separate setting for it, check if we can use Notification.permission so it works like other platforms.
+	if (process.platform !== 'win32' || !settings.win32.notificationBoxes) {
 		return;
 	}
 
@@ -61,17 +76,17 @@ function showNotification(title, content) {
 }
 
 function showBadge() {
-	if (process.platform === 'darwin') {
-		app.dock.setBadge(badge);
-	} else if (process.platform === 'win32') {
+	if (process.platform === 'darwin' && settings.darwin.badge) {
+		app.dock.setBadge(' ');
+	} else if (process.platform === 'win32' && settings.win32.badge) {
 		lastActiveWindow.setOverlayIcon(badge, 'You have unread messages');
 	}
 }
 
 function hideBadge() {
-	if (process.platform === 'darwin') {
+	if (process.platform === 'darwin' && settings.darwin.badge) {
 		app.dock.setBadge('');
-	} else if (process.platform === 'win32') {
+	} else if (process.platform === 'win32' && settings.win32.badge) {
 		lastActiveWindow.setOverlayIcon(null, '');
 	}
 }
@@ -148,39 +163,34 @@ app.on('ready', () => {
 
 		openAllTeamWindows(settings);
 
+		ipc.on('notification-shim', (e, msg) => {
+			const win = BrowserWindow.fromWebContents(e.sender);
+			if (win.isFocused()) {
+				// return;
+			}
+
+			const content = msg.options.body || '';
+			showBalloon(msg.title, content);
+			showNotification(msg.title, content);
+			showBadge();
+			bounceIcon();
+
+			// Doesn't seem possible to pass extra info to balloon, and we want this window to open when the balloon is clicked.
+			lastActiveWindow = win;
+		});
+
 		// Electron doesn't support notifications in Windows yet. https://github.com/atom/electron/issues/262
-		if (process.platform === 'win32' && (settings.win32.balloons || settings.win32.notificationBoxes)) {
+		// So we create our own Windows notification visualizations.
+		if (process.platform === 'win32') {
 			if (settings.win32.balloons) {
 				tray = new Tray(iconPath);
 				tray.setToolTip('HipsterChat notifications');
-
-				tray.on('balloon-clicked', () => {
-					lastActiveWindow.focus();
-					hideBadge();
-				});
+				tray.on('balloon-clicked', () => lastActiveWindow.focus());
 			}
 
 			if (settings.win32.notificationBoxes) {
-				notifier.on('click', () => {
-					lastActiveWindow.focus();
-					hideBadge();
-				});
+				notifier.on('click', () => lastActiveWindow.focus());
 			}
-
-			ipc.on('notification-shim', (e, msg) => {
-				const win = BrowserWindow.fromWebContents(e.sender);
-				if (win.isFocused()) {
-					return;
-				}
-
-				const content = msg.options.body || '';
-				showBalloon(msg.title, content);
-				showNotification(msg.title, content);
-				showBadge();
-
-				// Doesn't seem possible to pass extra info to balloon, and we want this window to open when the balloon is clicked.
-				lastActiveWindow = win;
-			});
 		}
 	});
 });

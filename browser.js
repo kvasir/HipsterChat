@@ -1,9 +1,8 @@
 'use strict';
-console.log('browser.js loaded');
 
-if (process.platform === 'win32') {
-	require('./browser-win32.js');
-}
+// Electron doesn't support notifications in Windows yet. https://github.com/atom/electron/issues/262
+// So we hijack the Notification API.
+require('./electron-notification-shim.js')();
 
 const ipc = require('ipc');
 ipc.on('debug-msg', msg => {
