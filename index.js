@@ -170,7 +170,7 @@ app.on('ready', () => {
 		ipc.on('notification-shim', (e, msg) => {
 			const win = BrowserWindow.fromWebContents(e.sender);
 			if (win.isFocused()) {
-				// return;
+				return;
 			}
 
 			const content = msg.options.body || '';
