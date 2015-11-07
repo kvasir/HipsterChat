@@ -18,6 +18,9 @@ require('crash-reporter').start();
 require('electron-debug')();
 
 const badge = NativeImage.createFromPath(path.join(__dirname, 'media/dot.png'));
+const iconPath = path.join(__dirname, 'media/Icon.png');
+const settingsFile = path.join(app.getPath('userData'), 'settings.json');
+
 const windows = [];
 let tray;
 let lastActiveWindow;
@@ -31,7 +34,6 @@ let settings = {
 		notificationSound: true
 	}
 };
-const settingsFile = path.join(app.getPath('userData'), 'settings.json');
 
 function showBalloon(title, content) {
 	if (!settings.win32.balloons) {
@@ -52,7 +54,7 @@ function showNotification(title, content) {
 	notifier.notify({
 		title,
 		message: content,
-		icon: path.join(__dirname, 'media/Icon.png'),
+		icon: iconPath,
 		sound: settings.win32.notificationSound,
 		wait: true
 	});
@@ -149,7 +151,7 @@ app.on('ready', () => {
 		// Electron doesn't support notifications in Windows yet. https://github.com/atom/electron/issues/262
 		if (process.platform === 'win32' && (settings.win32.balloons || settings.win32.notificationBoxes)) {
 			if (settings.win32.balloons) {
-				tray = new Tray(path.join(__dirname, 'media/Icon.png'));
+				tray = new Tray(iconPath);
 				tray.setToolTip('HipsterChat notifications');
 
 				tray.on('balloon-clicked', () => {
