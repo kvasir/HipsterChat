@@ -171,8 +171,9 @@ app.on('ready', () => {
 					return;
 				}
 
-				showBalloon(msg.title, msg.content);
-				showNotification(msg.title, msg.content);
+				const content = msg.options.body || '';
+				showBalloon(msg.title, content);
+				showNotification(msg.title, content);
 				showBadge();
 
 				// Doesn't seem possible to pass extra info to balloon, and we want this window to open when the balloon is clicked.
