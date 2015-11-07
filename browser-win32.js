@@ -1,6 +1,7 @@
 'use strict';
 console.log('browser-win32.js loaded');
 
+const overlayBadge = require('./overlay-badge.js');
 const ipc = require('ipc');
 const remote = require('remote');
 const NativeImage = remote.require('native-image');
@@ -67,7 +68,7 @@ function setBadge() {
 			ctx.fillText(text, 70, 105);
 		}
 
-		const badgeDataURL = canvas.toDataURL();
+		const badgeDataURL = overlayBadge.create(text);
 		const img = NativeImage.createFromDataUrl(badgeDataURL);
 
 		mainWindow.setOverlayIcon(img, text);
