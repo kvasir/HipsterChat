@@ -4,6 +4,9 @@ console.log('browser.js loaded');
 if (process.platform === 'win32') {
 	require('./browser-win32.js');
 }
+if (process.platform === 'darwin') {
+	require('./browser-darwin.js');
+}
 
 const ipc = require('ipc');
 ipc.on('debug-msg', msg => {
