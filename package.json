@@ -43,6 +43,7 @@
   ],
   "dependencies": {
     "electron-debug": "^0.2.1",
+    "electron-notification-shim": "^1.0.0",
     "node-notifier": "^4.3.1"
   },
   "devDependencies": {
