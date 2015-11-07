@@ -1,7 +1,7 @@
 
 <img src="media/logo_with_name.png" width="300px"/>
 
-> Unofficial HipChat app
+> Unofficial HipChat desktop client
 
 ![screenshot](media/screenshot.png)
 
