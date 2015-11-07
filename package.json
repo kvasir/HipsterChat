@@ -14,7 +14,8 @@
   },
   "author": "MartinSandstrom <maartiin_91@hotmail.com> (http://martinsandstrom.github.io)",
   "contributors": [
-    "John-Philip Johansson <seriema@gmail.com> (http://johansson.jp/)"
+    "John-Philip Johansson <seriema@gmail.com> (http://johansson.jp/)",
+    "Esbjörn Ekberg <oakninja@gmail.com> (http://oak.ninja/)"
   ],
   "engines": {
     "node": ">=4"
@@ -41,7 +42,7 @@
     "messaging"
   ],
   "dependencies": {
-    "electron-debug": "^0.3.0",
+    "electron-debug": "^0.2.1",
     "node-notifier": "^4.3.1"
   },
   "devDependencies": {
