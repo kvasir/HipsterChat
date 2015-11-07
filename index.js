@@ -7,7 +7,7 @@ const Menu = require('menu');
 const Tray = require('tray');
 const shell = require('shell');
 const ipc = require('ipc');
-const notifier = require('node-notifier');
+const WindowsToaster = require('node-notifier/notifiers/toaster');
 const NativeImage = require('native-image');
 const appMenu = require('./menu');
 
@@ -59,35 +59,39 @@ function bounceIcon() {
 	app.dock.bounce();
 }
 
-function showNotification(title, content) {
+function showToast(win, title, content) {
 	// We only want to use node-notifier for Windows, when the user wants it.
 	// TODO: Instead of a separate setting for it, check if we can use Notification.permission so it works like other platforms.
 	if (process.platform !== 'win32' || !settings.win32.notificationBoxes) {
 		return;
 	}
 
-	notifier.notify({
+	// TODO: WindowsToaster can take a fallback option, to use balloons if toaster isn't available. Consider it, since it would make our code easier.
+	const notifier = new WindowsToaster();
+	const message = {
 		title,
 		message: content,
 		icon: iconPath,
 		sound: settings.win32.notificationSound,
 		wait: true
-	});
+	};
+
+	notifier.notify(message, () => win.focus());
 }
 
-function showBadge() {
+function showBadge(win) {
 	if (process.platform === 'darwin' && settings.darwin.badge) {
 		app.dock.setBadge(' ');
 	} else if (process.platform === 'win32' && settings.win32.badge) {
-		lastActiveWindow.setOverlayIcon(badge, 'You have unread messages');
+		win.setOverlayIcon(badge, 'You have unread messages');
 	}
 }
 
-function hideBadge() {
+function hideBadge(win) {
 	if (process.platform === 'darwin' && settings.darwin.badge) {
 		app.dock.setBadge('');
 	} else if (process.platform === 'win32' && settings.win32.badge) {
-		lastActiveWindow.setOverlayIcon(null, '');
+		win.setOverlayIcon(null, '');
 	}
 }
 
@@ -112,7 +116,7 @@ function createTeamWindow(team) {
 	});
 
 	win.loadUrl(`https://${team}.hipchat.com/chat`);
-	win.on('focus', () => hideBadge());
+	win.on('focus', () => hideBadge(win));
 	win.webContents.on('new-window', (e, url) => {
 		e.preventDefault();
 		shell.openExternal(url);
@@ -171,8 +175,8 @@ app.on('ready', () => {
 
 			const content = msg.options.body || '';
 			showBalloon(msg.title, content);
-			showNotification(msg.title, content);
-			showBadge();
+			showToast(win, msg.title, content);
+			showBadge(win);
 			bounceIcon();
 
 			// Doesn't seem possible to pass extra info to balloon, and we want this window to open when the balloon is clicked.
@@ -185,11 +189,10 @@ app.on('ready', () => {
 			if (settings.win32.balloons) {
 				tray = new Tray(iconPath);
 				tray.setToolTip('HipsterChat notifications');
-				tray.on('balloon-clicked', () => lastActiveWindow.focus());
-			}
-
-			if (settings.win32.notificationBoxes) {
-				notifier.on('click', () => lastActiveWindow.focus());
+				tray.on('balloon-clicked', e => {
+					console.log(e);
+					lastActiveWindow.focus();
+				});
 			}
 		}
 	});
