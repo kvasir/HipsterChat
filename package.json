@@ -1,7 +1,7 @@
 {
   "name": "HipsterChat",
   "productName": "HipsterChat",
-  "version": "0.1.0",
+  "version": "0.2.0-pre2",
   "description": "",
   "license": "MIT",
   "repository": {
@@ -24,10 +24,10 @@
   "scripts": {
     "test": "xo",
     "start": "electron .",
-    "build": "npm run build-osx && npm run build-linux && npm run build-windows",
+    "build": "npm prune && npm install && npm run build-osx && npm run build-linux && npm run build-windows",
     "build-osx": "electron-packager . $npm_package_productName --overwrite --out=dist --ignore='^/dist$' --ignore='^/media$' --prune --platform=darwin --arch=x64 --icon=media/Icon.icns --app-bundle-id=com.kvasir.hipsterchat --app-version=$npm_package_version --version=$npm_package_electronVersion && cd dist/HipsterChat-darwin-x64 && zip -ryXq9 ../HipsterChat-osx-${npm_package_version}.zip HipsterChat.app",
     "build-linux": "electron-packager . $npm_package_productName --overwrite --out=dist --ignore='^/dist$' --ignore='^/media/(?!Icon.png$).*' --prune --platform=linux --arch=x64 --app-bundle-id=com.kvasir.hipsterchat --app-version=$npm_package_version --version=$npm_package_electronVersion && cd dist/HipsterChat-linux-x64/ && zip -ryq9 ../HipsterChat-linux-\"$npm_package_version\".zip *",
-    "build-windows": "electron-packager . $npm_package_productName --overwrite --out=dist --ignore='^/dist$' --ignore='^/media/(?!Icon.ico$).*' --prune --platform=win32 --arch=ia32 --icon=media/Icon.ico --version=$npm_package_electronVersion --version-string.ProductName=$npm_package_productName --version-string.ProductVersion=$npm_package_electronVersion && cd dist/HipsterChat-win32-ia32/ && zip -ryq9 ../HipsterChat-windows-\"$npm_package_version\".zip *"
+    "build-windows": "electron-packager . $npm_package_productName --overwrite --out=dist --ignore='^/dist$' --ignore='^/media/Icon.icns' --ignore='^/media/Icon.svg' --ignore='^/media/screenshot.png' --prune --platform=win32 --arch=ia32 --icon=media/Icon.ico --version=$npm_package_electronVersion --version-string.ProductName=$npm_package_productName --version-string.ProductVersion=$npm_package_electronVersion && cd dist/HipsterChat-win32-ia32/ && zip -ryq9 ../HipsterChat-windows-\"$npm_package_version\".zip *"
   },
   "files": [
     "index.js",
@@ -42,7 +42,9 @@
     "messaging"
   ],
   "dependencies": {
-    "electron-debug": "^0.2.1"
+    "electron-debug": "^0.2.1",
+    "electron-notification-shim": "^1.0.0",
+    "node-notifier": "^4.3.1"
   },
   "devDependencies": {
     "electron-packager": "^5.0.0",
@@ -51,6 +53,12 @@
   },
   "xo": {
     "esnext": true,
+    "rules": {
+      "no-native-reassign": [2, {"exceptions": ["Notification"]}]
+    },
+    "globals": [
+      "Notification:true"
+    ],
     "envs": [
       "node",
       "browser"
