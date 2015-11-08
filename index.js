@@ -2,10 +2,10 @@
 const app = require('app');
 const fs = require('fs');
 const path = require('path');
-const ipc = require('ipc');
 const BrowserWindow = require('browser-window');
 const Menu = require('menu');
 const appMenu = require('./menu');
+const shell = require('shell');
 
 // report crashes to the Electron project
 require('crash-reporter').start();
@@ -13,15 +13,16 @@ require('crash-reporter').start();
 // adds debug features like hotkeys for triggering dev tools and reload
 require('electron-debug')();
 
-let windows = [];
-let settingsWindow = null;
+const windows = [];
 
 function createTeamWindow(team) {
 	const win = new BrowserWindow({
-		'min-width': 800,
-		'min-height': 600,
+		'min-width': 750,
+		'min-height': 250,
+		'width': 800,
+		'height': 600,
 		'web-preferences': {
-			'partition': team,
+			'partition': `persist:${team}`,
 			'plugins': false,
 
 			'preload': path.join(__dirname, 'browser.js'),
@@ -30,14 +31,21 @@ function createTeamWindow(team) {
 		}
 	});
 
-	win.loadUrl('https://' + team + '.hipchat.com');
+	win.loadUrl(`https://${team}.hipchat.com/chat`);
+	win.webContents.on('new-window', (e, url) => {
+		e.preventDefault();
+		shell.openExternal(url);
+	});
 	win.webContents.on('did-finish-load', () => {
-		win.setTitle(team);
+		if (team !== 'www') {
+			win.setTitle(team);
+		}
 	});
 
 	return win;
 }
 
+<<<<<<< HEAD
 function createSettingsWindow() {
 	settingsWindow = new BrowserWindow({
 		title: app.getName(),
@@ -51,8 +59,10 @@ function createSettingsWindow() {
 	return settingsWindow;
 }
 
+=======
+>>>>>>> master
 function openAllTeamWindows(settings) {
-	settings.teams.forEach(function(team, index){
+	settings.teams.forEach((team, index) => {
 		windows.push(createTeamWindow(team, index));
 	});
 }
@@ -74,20 +84,25 @@ app.on('ready', () => {
 		showSettings: true
 	};
 
+<<<<<<< HEAD
 	ipc.on('show-setting', function(){
 		settingsWindow.show();
 	});
 
 	fs.access(settingsFile, fs.F_OK, function (err) {
+=======
+	fs.access(settingsFile, fs.F_OK, err => {
+>>>>>>> master
 		// Create settings file if it doesn't exist.
 		if (err) {
 			fs.writeFileSync(settingsFile, JSON.stringify(settings), 'utf8');
 		} else {
-			let file = fs.readFileSync(settingsFile, 'utf8');
+			const file = fs.readFileSync(settingsFile, 'utf8');
 			settings = JSON.parse(file);
 		}
 
 		openAllTeamWindows(settings);
+<<<<<<< HEAD
 
 		settingsWindow = createSettingsWindow();
 		settingsWindow.webContents.on('did-finish-load', function() {
@@ -113,5 +128,7 @@ app.on('ready', () => {
 			windows = [];
 			openAllTeamWindows(settings);
 		});
+=======
+>>>>>>> master
 	});
 });

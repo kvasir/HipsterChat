@@ -1,9 +1,7 @@
 'use strict';
 const os = require('os');
 const app = require('app');
-const ipc = require('ipc');
 const Menu = require('menu');
-const BrowserWindow = require('browser-window');
 const shell = require('shell');
 const appName = app.getName();
 
@@ -49,13 +47,13 @@ const darwinTpl = [
 	{
 		label: 'Edit',
 		submenu: [
-			{ label: 'Undo', accelerator: 'CmdOrCtrl+Z', selector: 'undo:' },
-			{ label: 'Redo', accelerator: 'Shift+CmdOrCtrl+Z', selector: 'redo:' },
-			{ type: 'separator' },
-			{ label: 'Cut', accelerator: 'CmdOrCtrl+X', selector: 'cut:' },
-			{ label: 'Copy', accelerator: 'CmdOrCtrl+C', selector: 'copy:' },
-			{ label: 'Paste', accelerator: 'CmdOrCtrl+V', selector: 'paste:' },
-			{ label: 'Select All', accelerator: 'CmdOrCtrl+A', selector: 'selectAll:' }
+			{label: 'Undo', accelerator: 'CmdOrCtrl+Z', selector: 'undo:'},
+			{label: 'Redo', accelerator: 'Shift+CmdOrCtrl+Z', selector: 'redo:'},
+			{type: 'separator'},
+			{label: 'Cut', accelerator: 'CmdOrCtrl+X', selector: 'cut:'},
+			{label: 'Copy', accelerator: 'CmdOrCtrl+C', selector: 'copy:'},
+			{label: 'Paste', accelerator: 'CmdOrCtrl+V', selector: 'paste:'},
+			{label: 'Select All', accelerator: 'CmdOrCtrl+A', selector: 'selectAll:'}
 		]
 	},
 	{

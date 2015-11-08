@@ -1,18 +1,31 @@
-# HipsterChat
 
-> Unofficial HipChat app
+<img src="media/logo_with_name.png" width="300px"/>
+
+> Unofficial HipChat desktop client
+
+![screenshot](media/screenshot.png)
 
 *OS X 10.8+, Windows 7+ & Linux are supported.*
 
-### Run
 
-```
-$ npm start
-```
+## Install
 
-### Dev
+### OS X
 
-Builds the app for OS X, Linux, and Windows, using [electron-packager](https://github.com/maxogden/electron-packager).
+[**Download**](https://github.com/kvasir/hipsterchat/releases/latest), unzip, and move `HipsterChat.app` to the `/Applications` directory.
+
+### Linux
+
+[**Download**](https://github.com/kvasir/hipsterchat/releases/latest) and unzip to some location.
+
+### Windows
+
+[**Download**](https://github.com/kvasir/hipsterchat/releases/latest) and unzip to some location.
+
+
+## Dev
+
+Built with [Electron](http://electron.atom.io).
 
 ###### Commands
 
