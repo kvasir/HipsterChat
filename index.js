@@ -24,6 +24,7 @@ function createTeamWindow(team) {
 			'partition': team,
 			'plugins': false,
 
+			'preload': path.join(__dirname, 'browser.js'),
 			// fails without this because of CommonJS script detection
 			'node-integration': false
 		}
@@ -104,6 +105,7 @@ app.on('ready', () => {
 			fs.writeFileSync(settingsFile, JSON.stringify(settings), 'utf8');
 
 			// Close all windows, and open them again. Not super clean but...
+
 			settingsWindow.hide();
 			windows.forEach(function (w) {
 				w.close();
