@@ -76,7 +76,8 @@ function showToast(win, title, content) {
 		wait: true
 	};
 
-	notifier.notify(message, () => win.focus());
+	notifier.notify(message);
+	notifier.on('click', () => win.focus());
 }
 
 function showBadge(win) {
