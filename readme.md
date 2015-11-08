@@ -12,6 +12,14 @@
 
 ### OS X
 
+#### [Homebrew Cask](http://caskroom.io)
+
+```
+$ brew cask install hipsterchat
+```
+
+#### Manually
+
 [**Download**](https://github.com/kvasir/hipsterchat/releases/latest), unzip, and move `HipsterChat.app` to the `/Applications` directory.
 
 ### Linux
