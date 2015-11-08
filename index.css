@@ -11,3 +11,7 @@ body {
 .window-content{
 	padding: 10px;
 }
+
+.label-for{
+	cursor: pointer;
+}
