@@ -13,8 +13,8 @@ require('crash-reporter').start();
 // adds debug features like hotkeys for triggering dev tools and reload
 require('electron-debug')();
 
-var windows = [];
-var settingsWindow;
+let windows = [];
+let settingsWindow;
 
 function createTeamWindow(team) {
 	const win = new BrowserWindow({
@@ -45,7 +45,7 @@ function createTeamWindow(team) {
 
 	return win;
 }
-function createSettingsWindow() {
+function createSettingsWindow(settings) {
 	settingsWindow = new BrowserWindow({
 		title: app.getName(),
 		width: 400,
@@ -55,6 +55,10 @@ function createSettingsWindow() {
 	});
 
 	settingsWindow.loadUrl('file://' + path.join(__dirname, 'settings.html'));
+
+	settingsWindow.webContents.on('did-finish-load', function() {
+		settingsWindow.webContents.send('settings-message', settings);
+	});
 	return settingsWindow;
 }
 
@@ -85,6 +89,11 @@ app.on('ready', () => {
 		settingsWindow.show();
 	});
 
+	ipc.on('cancel-settings', function(){
+		settingsWindow.hide();
+		settingsWindow = createSettingsWindow(settings);
+	});
+
 	fs.access(settingsFile, fs.F_OK, err => {
 		// Create settings file if it doesn't exist.
 		if (err) {
@@ -96,10 +105,7 @@ app.on('ready', () => {
 
 		openAllTeamWindows(settings);
 
-		settingsWindow = createSettingsWindow();
-		settingsWindow.webContents.on('did-finish-load', function() {
-			settingsWindow.webContents.send('settings-message', settings);
-		});
+		settingsWindow = createSettingsWindow(settings);
 
 		if(settings.showSettings)
 			settingsWindow.show();

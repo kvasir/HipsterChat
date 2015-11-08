@@ -14,14 +14,16 @@
 			</header>
 			<div class="window-content">
 				<form class="teams">
-					<label class="label-for"><input class="show-settings-on-start" type="checkbox"> Show settings on application start</label>
+					<label class="clickable"><input class="show-settings-on-start" type="checkbox"> Show settings on application start</label>
 				</form>
 
 			</div>
 			<footer class="toolbar toolbar-footer">
 
 				<div class="toolbar-actions">
-						<button class="btn btn-default add-team">Add team</button>
+					<button class="btn btn-default add-team">Add team</button>
+
+					<button class="btn btn-default pull-right cancel-settings">Cancel</button>
 					<button class="btn btn-primary pull-right save-settings">Save</button>
 				</div>
 			</footer>
@@ -50,6 +52,11 @@
 			var addButton = document.getElementsByClassName('add-team')[0];
 			addButton.addEventListener('click', function () {
 				list.appendChild(createTeamItem(''));
+			});
+
+			var cancelButton = document.getElementsByClassName('cancel-settings')[0];
+			cancelButton.addEventListener('click', function () {
+				ipc.send('cancel-settings');
 			});
 
 			function createTeamItem(value) {
