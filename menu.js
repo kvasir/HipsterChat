@@ -3,6 +3,7 @@ const os = require('os');
 const app = require('app');
 const Menu = require('menu');
 const shell = require('shell');
+const BrowserWindow = require('browser-window');
 const appName = app.getName();
 
 function sendAction(action) {

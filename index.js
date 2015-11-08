@@ -6,14 +6,15 @@ const BrowserWindow = require('browser-window');
 const Menu = require('menu');
 const appMenu = require('./menu');
 const shell = require('shell');
-
+const ipc = require('ipc');
 // report crashes to the Electron project
 require('crash-reporter').start();
 
 // adds debug features like hotkeys for triggering dev tools and reload
 require('electron-debug')();
 
-const windows = [];
+var windows = [];
+var settingsWindow;
 
 function createTeamWindow(team) {
 	const win = new BrowserWindow({
@@ -44,8 +45,6 @@ function createTeamWindow(team) {
 
 	return win;
 }
-
-<<<<<<< HEAD
 function createSettingsWindow() {
 	settingsWindow = new BrowserWindow({
 		title: app.getName(),
@@ -59,8 +58,6 @@ function createSettingsWindow() {
 	return settingsWindow;
 }
 
-=======
->>>>>>> master
 function openAllTeamWindows(settings) {
 	settings.teams.forEach((team, index) => {
 		windows.push(createTeamWindow(team, index));
@@ -84,15 +81,11 @@ app.on('ready', () => {
 		showSettings: true
 	};
 
-<<<<<<< HEAD
 	ipc.on('show-setting', function(){
 		settingsWindow.show();
 	});
 
-	fs.access(settingsFile, fs.F_OK, function (err) {
-=======
 	fs.access(settingsFile, fs.F_OK, err => {
->>>>>>> master
 		// Create settings file if it doesn't exist.
 		if (err) {
 			fs.writeFileSync(settingsFile, JSON.stringify(settings), 'utf8');
@@ -102,14 +95,11 @@ app.on('ready', () => {
 		}
 
 		openAllTeamWindows(settings);
-<<<<<<< HEAD
 
 		settingsWindow = createSettingsWindow();
 		settingsWindow.webContents.on('did-finish-load', function() {
 			settingsWindow.webContents.send('settings-message', settings);
 		});
-
-
 
 		if(settings.showSettings)
 			settingsWindow.show();
@@ -128,7 +118,5 @@ app.on('ready', () => {
 			windows = [];
 			openAllTeamWindows(settings);
 		});
-=======
->>>>>>> master
 	});
 });
