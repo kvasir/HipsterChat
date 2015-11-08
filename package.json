@@ -47,6 +47,8 @@
   "devDependencies": {
     "electron-packager": "^5.0.0",
     "electron-prebuilt": "^0.34.2",
+    "grunt": "^0.4.5",
+    "grunt-electron-installer": "^1.0.10",
     "xo": "^0.10.0"
   },
   "xo": {
