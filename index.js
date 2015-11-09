@@ -85,7 +85,7 @@ app.on('ready', () => {
 		showSettings: true
 	};
 
-	ipc.on('show-setting', function(){
+	ipc.on('show-settings-window', function(){
 		settingsWindow.show();
 	});
 
