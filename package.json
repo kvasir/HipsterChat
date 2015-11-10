@@ -2,7 +2,7 @@
   "name": "HipsterChat",
   "productName": "HipsterChat",
   "version": "0.2.1",
-  "description": "",
+  "description": "Unofficial HipChat desktop client.",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -12,8 +12,9 @@
   "bugs": {
     "url": "https://github.com/kvasir/HipsterChat/issues"
   },
-  "author": "MartinSandstrom <maartiin_91@hotmail.com> (http://martinsandstrom.github.io)",
+  "author": "Kvasir",
   "contributors": [
+    "Martin Sandström <maartiin_91@hotmail.com> (http://martinsandstrom.github.io)",
     "John-Philip Johansson <seriema@gmail.com> (http://johansson.jp/)",
     "Esbjörn Ekberg <oakninja@gmail.com> (http://oak.ninja/)"
   ],
