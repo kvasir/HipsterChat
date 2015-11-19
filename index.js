@@ -54,9 +54,9 @@ function createSettingsWindow(settings) {
 		frame: false
 	});
 
-	settingsWindow.loadUrl('file://' + path.join(__dirname, 'settings.html'));
+	settingsWindow.loadUrl(`file://${__dirname}/settings.html`);
 
-	settingsWindow.webContents.on('did-finish-load', function() {
+	settingsWindow.webContents.on('did-finish-load', () => {
 		settingsWindow.webContents.send('settings-message', settings);
 	});
 	return settingsWindow;
@@ -85,11 +85,11 @@ app.on('ready', () => {
 		showSettings: true
 	};
 
-	ipc.on('show-settings-window', function(){
+	ipc.on('show-settings-window', () => {
 		settingsWindow.show();
 	});
 
-	ipc.on('cancel-settings', function(){
+	ipc.on('cancel-settings', () => {
 		settingsWindow.hide();
 		settingsWindow = createSettingsWindow(settings);
 	});
@@ -107,10 +107,11 @@ app.on('ready', () => {
 
 		settingsWindow = createSettingsWindow(settings);
 
-		if(settings.showSettings)
+		if (settings.showSettings) {
 			settingsWindow.show();
+		}
 
-		ipc.on('settings-save', function (event, newSettings) {
+		ipc.on('settings-save', (event, newSettings) => {
 			settings.teams = newSettings.teams.filter(Boolean);
 			settings.showSettings = newSettings.showSettings;
 			fs.writeFileSync(settingsFile, JSON.stringify(settings), 'utf8');
@@ -118,7 +119,7 @@ app.on('ready', () => {
 			// Close all windows, and open them again. Not super clean but...
 
 			settingsWindow.hide();
-			windows.forEach(function (w) {
+			windows.forEach(w => {
 				w.close();
 			});
 			windows = [];
