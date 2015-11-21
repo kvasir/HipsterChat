@@ -28,7 +28,7 @@ const darwinTpl = [
 			},
 			{
 				label: 'Preferences...',
-				accelerator: 'Cmd+,',
+				accelerator: 'CmdOrCtrl+,',
 				click() {
 					sendAction('show-settings');
 				}
