@@ -15,3 +15,7 @@ body {
 .clickable{
 	cursor: pointer;
 }
+
+.teams{
+	width: 100%;
+}
