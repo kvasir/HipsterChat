@@ -81,8 +81,7 @@ app.on('ready', () => {
 
 	// Default settings
 	let settings = {
-		teams: ['www'],
-		showSettings: true
+		teams: ['www']
 	};
 
 	ipc.on('show-settings-window', () => {
@@ -107,13 +106,8 @@ app.on('ready', () => {
 
 		settingsWindow = createSettingsWindow(settings);
 
-		if (settings.showSettings) {
-			settingsWindow.show();
-		}
-
 		ipc.on('settings-save', (event, newSettings) => {
 			settings.teams = newSettings.teams.filter(Boolean);
-			settings.showSettings = newSettings.showSettings;
 			fs.writeFileSync(settingsFile, JSON.stringify(settings), 'utf8');
 
 			// Close all windows, and open them again. Not super clean but...

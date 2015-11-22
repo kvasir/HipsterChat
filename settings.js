@@ -2,7 +2,6 @@
 	'use strict';
 	const ipc = require('ipc');
 	const list = document.getElementsByClassName('teams')[0];
-	const settingsCheckbox = document.getElementsByClassName('show-settings-on-start')[0];
 
 	const saveButton = document.getElementsByClassName('save-settings')[0];
 	saveButton.addEventListener('click', () => {
@@ -13,9 +12,9 @@
 			teams.push(teamNames[i].value);
 		}
 		const settings = {
-			teams,
-			showSettings: settingsCheckbox.checked
+			teams
 		};
+		console.log('skickar', settings);
 		ipc.send('settings-save', settings);
 	});
 
@@ -45,8 +44,5 @@
 		settings.teams.forEach(team => {
 			list.appendChild(createTeamItem(team));
 		});
-		if (settings.showSettings) {
-			settingsCheckbox.checked = true;
-		}
 	});
 })();
