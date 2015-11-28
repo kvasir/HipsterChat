@@ -21,7 +21,6 @@
   "engines": {
     "node": ">=4"
   },
-  "electronVersion": "0.34.1",
   "scripts": {
     "test": "xo",
     "start": "electron .",
@@ -47,9 +46,10 @@
     "electron-notification-shim": "^1.0.0",
     "node-notifier": "^4.3.1"
   },
+	"electronVersion": "0.35.2",
   "devDependencies": {
     "electron-packager": "^5.0.0",
-    "electron-prebuilt": "^0.34.2",
+    "electron-prebuilt": "^0.35.2",
     "xo": "^0.10.0"
   },
   "xo": {

@@ -116,7 +116,7 @@ function createTeamWindow(team) {
 		}
 	});
 
-	win.loadUrl(`https://${team}.hipchat.com/chat`);
+	win.loadURL(`https://${team}.hipchat.com/chat`);
 	win.on('focus', () => hideBadge(win));
 	win.webContents.on('new-window', (e, url) => {
 		e.preventDefault();
