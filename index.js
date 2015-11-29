@@ -4,7 +4,6 @@ const fs = require('fs');
 const path = require('path');
 const BrowserWindow = require('browser-window');
 const Menu = require('menu');
-const Tray = require('tray');
 const shell = require('shell');
 const ipc = require('ipc');
 const NativeImage = require('native-image');
@@ -17,12 +16,9 @@ require('crash-reporter').start();
 require('electron-debug')();
 
 const badge = NativeImage.createFromPath(path.join(__dirname, 'media/dot.png'));
-const iconPath = path.join(__dirname, 'media/Icon.png');
 const settingsFile = path.join(app.getPath('userData'), 'settings.json');
 
 const windows = [];
-let tray;
-let lastActiveWindow;
 
 // Default settings
 let settings = {
@@ -32,21 +28,9 @@ let settings = {
 		bounce: true
 	},
 	win32: {
-		badge: true,
-		balloons: false
+		badge: true
 	}
 };
-
-function showBalloon(title, content) {
-	if (process.platform !== 'win32' || !settings.win32.balloons) {
-		return;
-	}
-
-	tray.displayBalloon({
-		title,
-		content
-	});
-}
 
 function bounceIcon() {
 	if (process.platform !== 'darwin' || !settings.darwin.bounce) {
@@ -116,7 +100,6 @@ function openAllTeamWindows(settings) {
 	settings.teams.forEach((team, index) => {
 		windows.push(createTeamWindow(team, index));
 	});
-	lastActiveWindow = windows[windows.length - 1];
 }
 
 app.on('window-all-closed', () => {
@@ -144,32 +127,14 @@ app.on('ready', () => {
 
 		openAllTeamWindows(settings);
 
-		ipc.on('notification-shim', (e, msg) => {
+		ipc.on('notification-shim', e => {
 			const win = BrowserWindow.fromWebContents(e.sender);
 			if (win.isFocused()) {
 				return;
 			}
 
-			const content = msg.options.body || '';
-			showBalloon(msg.title, content);
 			showBadge(win);
 			bounceIcon();
-
-			// Doesn't seem possible to pass extra info to balloon, and we want this window to open when the balloon is clicked.
-			lastActiveWindow = win;
 		});
-
-		// Electron doesn't support notifications in Windows yet. https://github.com/atom/electron/issues/262
-		// So we create our own Windows notification visualizations.
-		if (process.platform === 'win32') {
-			if (settings.win32.balloons) {
-				tray = new Tray(iconPath);
-				tray.setToolTip('HipsterChat notifications');
-				tray.on('balloon-clicked', e => {
-					console.log(e);
-					lastActiveWindow.focus();
-				});
-			}
-		}
 	});
 });
