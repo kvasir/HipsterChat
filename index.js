@@ -7,7 +7,6 @@ const Menu = require('menu');
 const Tray = require('tray');
 const shell = require('shell');
 const ipc = require('ipc');
-const WindowsToaster = require('node-notifier/notifiers/toaster');
 const NativeImage = require('native-image');
 const appMenu = require('./menu');
 
@@ -34,9 +33,7 @@ let settings = {
 	},
 	win32: {
 		badge: true,
-		balloons: false,
-		notificationBoxes: true,
-		notificationSound: true
+		balloons: false
 	}
 };
 
@@ -57,27 +54,6 @@ function bounceIcon() {
 	}
 
 	app.dock.bounce();
-}
-
-function showToast(win, title, content) {
-	// We only want to use node-notifier for Windows, when the user wants it.
-	// TODO: Instead of a separate setting for it, check if we can use Notification.permission so it works like other platforms.
-	if (process.platform !== 'win32' || !settings.win32.notificationBoxes) {
-		return;
-	}
-
-	// TODO: WindowsToaster can take a fallback option, to use balloons if toaster isn't available. Consider it, since it would make our code easier.
-	const notifier = new WindowsToaster();
-	const message = {
-		title,
-		message: content,
-		icon: iconPath,
-		sound: settings.win32.notificationSound,
-		wait: true
-	};
-
-	notifier.notify(message);
-	notifier.on('click', () => win.focus());
 }
 
 function showBadge(win) {
@@ -176,7 +152,6 @@ app.on('ready', () => {
 
 			const content = msg.options.body || '';
 			showBalloon(msg.title, content);
-			showToast(win, msg.title, content);
 			showBadge(win);
 			bounceIcon();
 
