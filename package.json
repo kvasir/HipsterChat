@@ -43,19 +43,26 @@
     "messaging"
   ],
   "dependencies": {
-    "electron-debug": "^0.2.1",
+    "electron-debug": "^0.7.0",
     "electron-notification-shim": "^1.0.0"
   },
-	"electronVersion": "0.35.2",
+  "electronVersion": "0.37.8",
   "devDependencies": {
-    "electron-packager": "^5.0.0",
-    "electron-prebuilt": "^0.35.2",
-    "xo": "^0.10.0"
+    "electron-packager": "^7.0.1",
+    "electron-prebuilt": "^0.37.8",
+    "xo": "^0.15.0"
   },
   "xo": {
     "esnext": true,
     "rules": {
-      "no-native-reassign": [2, {"exceptions": ["Notification"]}]
+      "no-native-reassign": [
+        2,
+        {
+          "exceptions": [
+            "Notification"
+          ]
+        }
+      ]
     },
     "globals": [
       "Notification:true"
